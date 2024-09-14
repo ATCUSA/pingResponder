@@ -1,4 +1,4 @@
-# Ping Server
+# Ping Responder
 
 A simple Rust application that starts an HTTP server responding with `200 OK` to any request.
 
@@ -20,4 +20,4 @@ A simple Rust application that starts an HTTP server responding with `200 OK` to
 1. **Download the Installation Script:**
 
    ```bash
-   wget https://raw.githubusercontent.com/yourusername/ping_server/main/install.sh
+   wget https://raw.githubusercontent.com/ATCUSA/pingResponder/master/install.sh
