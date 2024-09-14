@@ -61,8 +61,8 @@ else
 fi
 
 # GitHub repository details
-GITHUB_USER="yourusername"   # Replace with your GitHub username
-REPO_NAME="ping_server"      # Replace with your repository name
+GITHUB_USER="ATCUSA"   # Replace with your GitHub username
+REPO_NAME="pingResponder"      # Replace with your repository name
 
 # Get latest release tag from GitHub
 LATEST_TAG=$(curl --silent "https://api.github.com/repos/${GITHUB_USER}/${REPO_NAME}/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')

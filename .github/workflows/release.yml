@@ -44,13 +44,13 @@ jobs:
       - name: Archive binary
         run: |
           cd target/${{ matrix.target }}/release
-          zip ping_server-${{ matrix.target }}.zip ping_server${{ steps.set_extension.outputs.extension }}
+          zip pingResponder-${{ matrix.target }}.zip pingResponder${{ steps.set_extension.outputs.extension }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ping_server-${{ matrix.target }}
-          path: target/${{ matrix.target }}/release/ping_server-${{ matrix.target }}.zip
+          name: pingResponder-${{ matrix.target }}
+          path: target/${{ matrix.target }}/release/pingResponder-${{ matrix.target }}.zip
 
   release:
     needs: build
