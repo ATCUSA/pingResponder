@@ -73,11 +73,11 @@ if [ -z "$LATEST_TAG" ]; then
 fi
 
 # Download the binary
-ASSET_URL="https://github.com/${GITHUB_USER}/${REPO_NAME}/releases/download/${LATEST_TAG}/ping_server-${TARGET}.zip"
+ASSET_URL="https://github.com/${GITHUB_USER}/${REPO_NAME}/releases/download/${LATEST_TAG}/pingResponder-${TARGET}.zip"
 
-echo "Downloading ping_server for $TARGET from $ASSET_URL"
+echo "Downloading pingResponder for $TARGET from $ASSET_URL"
 
-curl -L -o ping_server.zip "$ASSET_URL"
+curl -L -o pingResponder.zip "$ASSET_URL"
 
 if [ $? -ne 0 ]; then
   echo "Failed to download the binary."
@@ -85,7 +85,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # Unzip the binary
-unzip ping_server.zip
+unzip pingResponder.zip
 
 if [ $? -ne 0 ]; then
   echo "Failed to unzip the binary."
@@ -93,17 +93,17 @@ if [ $? -ne 0 ]; then
 fi
 
 # Move binary to /usr/local/bin
-sudo mv ping_server /usr/local/bin/
+sudo mv pingResponder /usr/local/bin/
 
 if [ $? -ne 0 ]; then
   echo "Failed to move the binary to /usr/local/bin."
   exit 1
 fi
 
-sudo chmod +x /usr/local/bin/ping_server
+sudo chmod +x /usr/local/bin/pingResponder
 
 # Create systemd service file
-SERVICE_FILE="/etc/systemd/system/ping_server.service"
+SERVICE_FILE="/etc/systemd/system/pingResponder.service"
 
 if [ -z "$PORT" ]; then
   PORT_OPTION=""
@@ -118,7 +118,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/usr/local/bin/ping_server $PORT_OPTION
+ExecStart=/usr/local/bin/pingResponder $PORT_OPTION
 Restart=on-failure
 
 [Install]
@@ -129,10 +129,10 @@ EOL
 sudo systemctl daemon-reload
 
 # Enable and start the service
-sudo systemctl enable ping_server
-sudo systemctl start ping_server
+sudo systemctl enable pingResponder
+sudo systemctl start pingResponder
 
-echo "ping_server service installed and started on port $PORT."
+echo "pingResponder service installed and started on port $PORT."
 
 # Check if ufw is active
 if command -v ufw &> /dev/null; then
