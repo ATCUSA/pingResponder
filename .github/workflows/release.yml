@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*.*.*'  # Triggers on version tags like v1.0.0
 
+permissions:
+  contents: write  # Grants write permission to create releases
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -32,25 +35,28 @@ jobs:
       - name: Build with cross
         run: cross build --release --target ${{ matrix.target }}
 
-      - name: Set file extension
-        id: set_extension
+      - name: Set file extension and artifact name
+        id: set_names
         run: |
+          # Determine the file extension based on the target
           if [[ "${{ matrix.target }}" == *"windows"* ]]; then
             echo "extension=.exe" >> $GITHUB_OUTPUT
           else
             echo "extension=" >> $GITHUB_OUTPUT
           fi
 
-      - name: Archive binary
-        run: |
-          cd target/${{ matrix.target }}/release
-          zip pingResponder-${{ matrix.target }}.zip pingResponder${{ steps.set_extension.outputs.extension }}
+          # Simplify the target triple for artifact naming
+          simplified_target=${{ matrix.target }}
+          simplified_target=${simplified_target/unknown-/}
+          simplified_target=${simplified_target/pc-/}
 
-      - name: Upload artifact
+          echo "simplified_target=$simplified_target" >> $GITHUB_OUTPUT
+
+      - name: Upload binary artifact
         uses: actions/upload-artifact@v3
         with:
-          name: pingResponder-${{ matrix.target }}
-          path: target/${{ matrix.target }}/release/pingResponder-${{ matrix.target }}.zip
+          name: pingResponder-${{ steps.set_names.outputs.simplified_target }}
+          path: target/${{ matrix.target }}/release/pingResponder${{ steps.set_names.outputs.extension }}
 
   release:
     needs: build
@@ -64,6 +70,5 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          files: artifacts/**/*.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          files: artifacts/**/*
+          token: ${{ secrets.GITHUB_TOKEN }}
